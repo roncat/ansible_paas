@@ -1,0 +1,45 @@
+---
+# task que configura consul
+
+- name: Baixa versão do consul
+  shell: curl -sSL https://dl.bintray.com/mitchellh/consul/0.5.0_linux_amd64.zip > /tmp/consul.zip
+
+- name: Instala o consul
+  unarchive: src=/tmp/consul.zip dest=/usr/local/bin copy=no
+
+- name: Cria usuário do consul
+  user: name=consul
+
+- name: Remove configuração atual
+  shell: rm -rf /etc/consul.d
+
+- name: Cria pasta de trabalho
+  file: path=/var/consul state=directory owner=consul group=consul
+
+- name: Cria pasta de configuração
+  file: path=/etc/consul.d state=directory owner=consul group=consul
+
+- name: Cria pasta do web-ui
+  file: path=/etc/consul.d/webui state=directory owner=consul group=consul
+
+- name: Cria configuração de bootstrap
+  template: src=bootstrap.j2 dest=/etc/consul.d/config.json owner=consul group=consul
+
+- name: Cria configuração dos outros servers
+  template: src=servers.j2 dest=/etc/consul.d/config.json owner=consul group=consul
+  when: bootstrap == 'no'
+
+- name: Baixa a interface web do consul
+  shell: curl -sSL https://dl.bintray.com/mitchellh/consul/0.5.0_web_ui.zip > /tmp/consul_ui.zip
+
+- name: Instala o consul ui
+  unarchive: src=/tmp/consul_ui.zip dest=/etc/consul.d/webui copy=no
+
+- name: Cria script de inicialização do consul
+  template: src=consul.conf.j2 dest=/etc/init/consul.conf 
+
+- name: Dá permissões de execução especial ao consul 
+  shell: setcap 'cap_net_bind_service=+ep' /usr/local/bin/consul
+
+- name: reinicia o consul
+  service: name=consul state=restarted

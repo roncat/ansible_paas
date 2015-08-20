@@ -1,0 +1,14 @@
+# especifica qual a versão do zookeeper que será usada para instalar o cluster
+zookeeper_version: 3.4.6
+
+# zookeeper config
+tick_time: 2000
+data_dir: /opt/zookeeper/data
+log_dir: /opt/zookeeper/logs
+client_port: 2181
+init_limit: 5
+sync_limit: 2
+
+
+# configurações especificas 
+zookeeper_package_url: http://ftp.unicamp.br/pub/apache/zookeeper/zookeeper-{{zookeeper_version}}/zookeeper-{{zookeeper_version}}.tar.gz

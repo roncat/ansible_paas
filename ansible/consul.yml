@@ -1,0 +1,8 @@
+---
+# Este playbook configura um cluster consul
+
+- hosts: consul_servers 
+  sudo: True
+  roles:
+    - consul
+

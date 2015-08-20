@@ -1,0 +1,6 @@
+marathon_version: "0.8.1-1.0.171.ubuntu1404"
+
+zookeeper_client_port: "2181"
+mesos_zookeeper_masters: "zk://{{ groups.zookeeper_servers | join(':' + zookeeper_client_port + ',') }}:{{ zookeeper_client_port }}/mesos"
+marathon_zookeeper_state: "zk://{{ groups.zookeeper_servers | join(':' + zookeeper_client_port + ',') }}:{{ zookeeper_client_port }}/marathon"
+

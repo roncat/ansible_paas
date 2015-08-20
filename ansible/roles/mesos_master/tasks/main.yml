@@ -1,0 +1,46 @@
+---
+# task que configura uma instalação mesos master
+
+- name: adiciona chave mesosphere
+  apt_key: id=E56151BF keyserver=keyserver.ubuntu.com state=present
+
+- name: adiciona mesosphere repo
+  apt_repository: repo='deb http://repos.mesosphere.com/{{ansible_distribution|lower}} {{ansible_distribution_release|lower}} main' state=present
+
+- name: instala pacotes
+  apt: pkg={{item}} state=present update_cache=yes
+  with_items:
+    - wget
+    - curl
+    - unzip
+    - python-setuptools
+    - python-dev
+    - mesos={{mesos_version}}-1.0.{{ansible_distribution|lower}}{{ansible_distribution_version.split('.')|join('')}}
+  
+- name: workdir do mesos
+  file: path=/var/mesos state=directory
+
+# == Remove default configs
+- name: remove configuraçao default do mesos
+  file: state=absent path=/etc/mesos/
+
+- name: remove config default zookeeper
+  file: state=absent path=/etc/mesos/zk
+
+- name: Remove config default mesos-master
+  file: state=absent path=/etc/mesos-master/
+
+- name: Remove config default mesos-slave
+  file: state=absent path=/etc/mesos-slave/
+
+- name: configura mesos
+  template: src=conf-mesos.j2 dest=/etc/default/mesos
+
+- name: configura mesos master
+  template: src=conf-mesos-master.j2 dest=/etc/default/mesos-master
+
+- name: mesos master script
+  template: src=init-mesos-master.j2 dest=/etc/init/mesos-master.conf
+
+- name: reinicia mesos
+  service: name=mesos-master  enabled=yes state=restarted

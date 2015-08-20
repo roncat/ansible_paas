@@ -1,0 +1,17 @@
+{
+    "bootstrap": false,
+    "server": true,
+    "datacenter": "dc-capes-01",
+    "ui_dir": "/etc/consul.d/webui/dist",
+	"client_addr": "0.0.0.0",
+    "data_dir": "/var/consul",
+    "encrypt": "{{key_cluster}}",
+	"ports": {
+		"dns": 53
+	},
+	"recursor": "{{recursors}}",
+	"disable_update_check": true,
+    "log_level": "err",
+    "enable_syslog": true,
+    "start_join": ["{{groups.consul_servers | difference(ansible_default_ipv4.address) | join('","') }}"]
+}

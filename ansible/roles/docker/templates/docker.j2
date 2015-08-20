@@ -1,0 +1,13 @@
+BRIDGE=docker0
+CIDR=10.{{ docker_node }}.0.1/16
+
+wait_ip() {
+  address=$(ip add show $BRIDGE | grep 'inet ' | awk '{print $2}')
+  [ -z "$address" ] && sleep $1 || :
+}
+
+wait_ip 5
+wait_ip 15
+
+DOCKER_OPTS="--dns 10.{{ docker_node }}.0.1 --dns-search service.consul --fixed-cidr=$CIDR  --bridge $BRIDGE "
+#  --insecure-registry registry.ci.capes.gov.br"

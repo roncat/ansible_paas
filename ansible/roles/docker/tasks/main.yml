@@ -1,0 +1,23 @@
+---
+# task que configura docker
+
+- name: instala docker 
+  shell: curl -sSL https://get.docker.io/ubuntu/ | sudo sh
+
+- name: instala suporte a bridge
+  apt: pkg=bridge-utils state=present update_cache=yes
+
+- name: reconfigura interfaces de rede
+  template: src=interfaces.j2 dest=/etc/network/interfaces
+  
+- name: reconfigura rede dos containers docker
+  template: src=docker.j2 dest=/etc/default/docker
+
+- name: reinicia a rede
+  service: name=networking state=restarted
+
+- name: reinicia docker
+  service: name=docker state=restarted
+  
+  
+ 

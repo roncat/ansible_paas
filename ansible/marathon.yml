@@ -1,0 +1,9 @@
+---
+# Este playbook configura um cluster marathon
+
+- hosts: marathon_servers 
+  sudo: True
+  roles:
+    - java
+    - marathon
+

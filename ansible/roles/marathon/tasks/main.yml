@@ -1,0 +1,39 @@
+---
+# task que configura uma instalação marathon
+
+- name: adciona chave do mesosphere
+  apt_key: id=E56151BF keyserver=keyserver.ubuntu.com state=present
+
+- name: adiciona mesosphere repo
+  apt_repository: repo='deb http://repos.mesosphere.com/{{ansible_distribution|lower}} {{ansible_distribution_release|lower}} main' state=present
+  
+- name: Instala Marathon package
+  apt: pkg=marathon={{marathon_version}} state=present update_cache=yes
+  
+- name: cria diretorio de configuração do marathon
+  file: path=/etc/marathon/conf state=directory
+
+- name: configura zookeeper
+  lineinfile: line={{ mesos_zookeeper_masters }} dest=/etc/marathon/conf/master create=yes
+
+- name: remove artifact store
+  file: path=/etc/marathon/conf/artifact_store state=absent
+
+- name: configura checkpoint
+  file: path=/etc/marathon/conf/?checkpoint state=touch
+
+
+- name: configura zookeeper para guardar estado do marathon
+  template: src=zk.j2 dest=/etc/marathon/conf/zk
+
+- name: configura o hostname no marathon
+  lineinfile: line={{ inventory_hostname }} dest=/etc/marathon/conf/hostname create=yes
+
+- name: configura o event subscriber marathon
+  lineinfile: line=http_callback dest=/etc/marathon/conf/event_subscriber create=yes
+  
+- name: configura a porta do marathon 
+  lineinfile: line={{ 8080 }} dest=/etc/marathon/conf/http_port create=yes
+  
+- name: Start Marathon service
+  service: name=marathon  enabled=yes state=restarted 

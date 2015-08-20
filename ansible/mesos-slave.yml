@@ -1,0 +1,9 @@
+---
+# Este playbook configura um cluster mesos master
+
+- hosts: mesos_slave_servers 
+  sudo: True
+  roles:
+    - java
+    - mesos_slave
+    - docker

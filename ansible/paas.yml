@@ -1,0 +1,18 @@
+---
+# Este playbook configura um cluster paas completo
+
+- hosts: 
+    - zookeeper_servers 
+    - mesos_master_servers 
+    - mesos_slave_servers 
+    - marathon_servers
+    - consul_servers 
+  sudo: True
+  roles:
+    - java
+    - zookeeper
+    - mesos_master
+    - mesos_slave
+    - docker
+    - marathon
+    - consul

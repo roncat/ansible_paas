@@ -1,0 +1,9 @@
+---
+# Este playbook configura um cluster mesos master
+
+- hosts: zookeeper_servers 
+  sudo: True
+  roles:
+    - java
+    - zookeeper
+

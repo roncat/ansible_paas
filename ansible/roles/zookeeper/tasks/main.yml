@@ -1,0 +1,29 @@
+---
+# task que configura uma instalação zookeeper
+
+- name: Atualiza pacotes
+  apt: update_cache=yes
+
+- name: Instala o zookeeper
+  apt: pkg={{item}} state=installed
+  with_items:
+    - zookeeper
+    - zookeeperd
+
+- name: Cria o arquivo de configuração
+  template: src=zoo.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg   
+
+- name: Cria pasta de data do zookeeper
+  shell: mkdir -p /opt/zookeeper/data/
+
+- name: Cria pasta de logs do zookeeper
+  shell: mkdir -p /opt/zookeeper/logs
+  
+- name: Cria arquivo identificador do nó zookeeper
+  template: src=myid dest=/opt/zookeeper/data/myid
+
+- name: Concede permissões para o zookeeper
+  shell: chown zookeeper:zookeeper /opt/zookeeper* -R
+
+- name: Inicia zookeeper  
+  service: name=zookeeper enabled=yes state=restarted 

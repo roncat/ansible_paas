@@ -1,0 +1,17 @@
+---
+# task que configura uma instalação zookeeper
+
+- name: Instala os pacotes requeridos para o Java
+  apt: name=python-software-properties state=latest update_cache=yes
+
+- name: Instala o ppa para Oracle Java 8
+  apt_repository: repo='ppa:webupd8team/java'
+  
+- name: Atualiza apt-get
+  apt: update_cache=yes
+
+- name: Aceita licença do java
+  shell: echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | sudo /usr/bin/debconf-set-selections
+
+- name: Instala Oracle JDK 8
+  apt: name=oracle-java8-installer state=present install_recommends=yes
