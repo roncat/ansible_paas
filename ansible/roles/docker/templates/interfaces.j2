@@ -1,17 +1,15 @@
 auto lo
 iface lo inet loopback
 
-auto eth2
-iface eth2 inet static
-	address {{ansible_default_ipv4.address}}	
-	netmask {{ansible_default_ipv4.netmask}}	
-	network {{ansible_default_ipv4.network}}	
-	#gateway {{ansible_default_ipv4.gateway}}
-	#dns-nameservers {{dns_servers}}
+auto eth0
+iface eth0 inet static
+	address {{ansible_eth0.ipv4.address}}	
+	netmask {{ansible_eth0.ipv4.netmask}}	
+
 auto eth1
 
-auto eth0
-iface eth0 inet dhcp
+auto eth2
+iface eth2 inet dhcp
 
 
 auto docker0

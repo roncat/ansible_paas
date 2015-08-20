@@ -1,0 +1,8 @@
+
+#TODAS AS VMS
+sudo echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
+
+#SOMENTE NO ANSIBLE
+sudo apt-get install sshpass
+export ANSIBLE_HOST_KEY_CHECKING=False 
+ansible-playbook -i hosts paas.yml -u <usuario admin> --ask-pass
