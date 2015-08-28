@@ -6,3 +6,35 @@ sudo echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
 sudo apt-get install sshpass
 export ANSIBLE_HOST_KEY_CHECKING=False 
 ansible-playbook -i hosts paas.yml -u <usuario admin> --ask-pass
+
+
+# Network /etc/network/interfaces
+auto lo
+iface lo inet loopback
+
+auto eth0                                  # host-only
+iface eth0 inet static                      
+        address 172.16.156.101
+        netmask 255.255.255.0
+
+auto eth1                                   # host-only
+
+auto eth2                                   # nat
+iface eth2 inet dhcp          
+
+auto docker0
+iface docker0 inet static
+        address 10.1.0.1
+        netmask 255.0.0.0
+        bridge_ports eth1
+        bridge_stp off
+        bridge_fd 0
+--------------------------------------
+
+
+#iface eth0 inet static
+#    address 192.168.3.3
+#    netmask 255.255.255.0
+#    gateway 192.168.3.1
+#    dns-search example.com
+#    dns-nameservers 192.168.3.45 192.168.8.10
