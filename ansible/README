@@ -38,3 +38,12 @@ iface docker0 inet static
 #    gateway 192.168.3.1
 #    dns-search example.com
 #    dns-nameservers 192.168.3.45 192.168.8.10
+
+
+Install Ansible
+remove antes o ansible
+  $ apt-get remove ansible
+  $ sudo apt-get install software-properties-common
+  $ sudo apt-add-repository ppa:ansible/ansible
+  $ sudo apt-get update
+  $ sudo apt-get install ansible
